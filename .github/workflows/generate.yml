@@ -85,12 +85,28 @@ jobs:
         run: |
           mkdir -p output/
           sudo chmod -R 777 target
-          ls target/*/release
-          if [[ -f target/*/release/malefic ]]; then
-            mv target/*/release/malefic output/malefic-${{matrix.target}}
-          else
-            mv target/*/release/malefic.exe output/malefic-${{matrix.target}}.exe
-          fi
+          
+          files=(
+            "./target/${{matrix.target}}/release/malefic"
+            "./target/${{matrix.target}}/release/malefic.dll"
+            "./target/${{matrix.target}}/release/malefic.exe"
+          )
+          for f in "${files[@]}"; do
+            if [[ -f "$f" ]]; then
+              # 选择合适的目标文件名
+              if [[ "$f" == *malefic ]]; then
+                mv "$f" output/malefic-x86_64-unknown-linux-musl
+                echo "mv $f output/malefic-x86_64-unknown-linux-musl"
+              elif [[ "$f" == *malefic.dll ]]; then
+                mv "$f" output/malefic-x86_64-unknown-linux-musl.dll
+                echo "mv $f output/malefic-x86_64-unknown-linux-musl.dll"
+              elif [[ "$f" == *malefic.exe ]]; then
+                mv "$f" output/malefic-x86_64-unknown-linux-musl.exe
+                echo "mv $f output/malefic-x86_64-unknown-linux-musl.exe"
+              fi
+              break 
+            fi
+          done
 
       - name: Upload artifact ${{matrix.target}}
         if: ${{ github.event.inputs.release == 'none' }}
