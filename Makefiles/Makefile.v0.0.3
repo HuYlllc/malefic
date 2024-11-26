@@ -5,9 +5,7 @@ target_triple := x86_64-unknown-linux-musl
 malefic_modules_features :=
 
 base:
-	if [ ! -f malefic_mutant ]; then \
-		wget -O malefic_mutant https://github.com/chainreactors/malefic/releases/download/$(release_version)/malefic-mutant-x86_64-unknown-linux-musl
-	fi
+	if [ ! -f malefic_mutant ]; then wget -O malefic_mutant https://github.com/chainreactors/malefic/releases/download/$(release_version)/malefic-mutant-x86_64-unknown-linux-musl; fi
 	chmod +x malefic_mutant
 	wget https://github.com/chainreactors/malefic/releases/download/v0.0.3/resources.zip
 	unzip resources.zip -d resources
