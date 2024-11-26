@@ -18,6 +18,10 @@ on:
         description: 'Edition'
         required: false
         default: 'community'
+      package:
+        description: 'Package'
+        required: true
+        default: 'beacon'
       malefic_config_yaml:
         description: 'Malefic config (Base64-encoded content of config.yaml , will be masked in logs)'
         required: false
@@ -75,7 +79,7 @@ jobs:
       - name: Build ${{matrix.target}}
         shell: 'script --return --quiet --log-out /dev/null --command "bash -e {0}"'
         run: |
-            make target_triple=${{matrix.target}} -f ./Makefiles/Makefile.v0.0.3 
+            make target_triple=${{matrix.target}} ${{ github.event.inputs.package }}  -f ./Makefiles/Makefile.v0.0.3 
 
       - name: Rename binary for ${{matrix.target}}
         run: |
