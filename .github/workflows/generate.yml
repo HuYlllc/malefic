@@ -85,6 +85,7 @@ jobs:
         run: |
           mkdir -p output/
           sudo chmod -R 777 target
+          ls target/*/release
           if [[ -f target/*/release/malefic ]]; then
             mv target/*/release/malefic output/malefic-${{matrix.target}}
           else
