@@ -23,15 +23,15 @@ bind: base
 prelude: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
  	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate prelude autorun.yaml && \
- 		cargo build --release -p malefic --target $(target_triple)"
+ 		cargo build --release -p malefic-prelude --target $(target_triple)"
 
 
 pulse: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
  	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate pulse x64 win && \
- 		cargo build --target $(target_triple) --profile release-lto -p malefic-pulse"
+ 		cargo build --profile release-lto -p malefic-pulse --target $(target_triple)"
 
 modules: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
  	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate modules && \
- 		cargo build --target $(target_triple) --release -p malefic-modules --features \"$\""
+ 		cargo build --release -p malefic-modules --features $(malefic_modules_features) --target $(target_triple)"

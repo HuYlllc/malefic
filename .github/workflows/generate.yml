@@ -22,6 +22,10 @@ on:
         description: 'Package'
         required: true
         default: 'beacon'
+      malefic_modules_features:
+        description: 'Malefic modules features'
+        required: false
+        default: 'full'
       malefic_config_yaml:
         description: 'Malefic config (Base64-encoded content of config.yaml , will be masked in logs)'
         required: false
@@ -76,10 +80,17 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Build ${{matrix.target}}
+      - name: Build(${{ github.event.inputs.package }},${{matrix.target}})
+        if : ${{ github.event.inputs.package != 'modules' }}
         shell: 'script --return --quiet --log-out /dev/null --command "bash -e {0}"'
         run: |
             make target_triple=${{matrix.target}} ${{ github.event.inputs.package }}  -f ./Makefiles/Makefile.v0.0.3 
+
+      - name: Build(${{ github.event.inputs.package }},${{matrix.target}})
+        if : ${{ github.event.inputs.package == 'modules' }}
+        shell: 'script --return --quiet --log-out /dev/null --command "bash -e {0}"'
+        run: |
+            make target_triple=${{matrix.target}} ${{ github.event.inputs.package }} modules_features=${{ github.event.inputs.malefic_modules_features }} -f ./Makefiles/Makefile.v0.0.3  
 
       - name: Rename binary for ${{matrix.target}}
         run: |
@@ -93,7 +104,6 @@ jobs:
           )
           for f in "${files[@]}"; do
             if [[ -f "$f" ]]; then
-              # 选择合适的目标文件名
               if [[ "$f" == *malefic ]]; then
                 mv "$f" output/malefic-x86_64-unknown-linux-musl
                 echo "mv $f output/malefic-x86_64-unknown-linux-musl"
