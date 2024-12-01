@@ -33,5 +33,5 @@ pulse: base
 
 modules: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
- 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate modules && \
+ 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate modules $(malefic_modules_features) && \
  		cargo build --release -p malefic-modules --features $(malefic_modules_features) --target $(target_triple)"
