@@ -107,11 +107,11 @@ jobs:
               if [[ "$f" == *malefic ]]; then
                 mv "$f" output/malefic-${{matrix.target}}
                 echo "mv $f output/malefic-${{matrix.target}}"
-              elif [[ "$f" == *malefic.dll ]]; then
-                mv "$f" output/malefic-${{matrix.target}}.dll
+              elif [[ "$f" == *modules.dll ]]; then
+                mv "$f" output/modules-${{matrix.target}}.dll
                 echo "mv $f output/modules-${{matrix.target}}.dll"
               elif [[ "$f" == *malefic.exe ]]; then
-                mv "$f" output/${{matrix.target}}.exe
+                mv "$f" output/malefic-${{matrix.target}}.exe
                 echo "mv $f output/malefic-${{matrix.target}}.exe"
               fi
               break 
