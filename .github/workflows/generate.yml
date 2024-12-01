@@ -99,10 +99,9 @@ jobs:
           
           files=(
             "./target/${{matrix.target}}/release/malefic"
-            "./target/${{matrix.target}}/release/malefic.dll"
+            "./target/${{matrix.target}}/release/modules.dll"
             "./target/${{matrix.target}}/release/malefic.exe"
           )
-          tree ./target/${{matrix.target}}/release
           for f in "${files[@]}"; do
             if [[ -f "$f" ]]; then
               if [[ "$f" == *malefic ]]; then
@@ -110,7 +109,7 @@ jobs:
                 echo "mv $f output/malefic-${{matrix.target}}"
               elif [[ "$f" == *malefic.dll ]]; then
                 mv "$f" output/malefic-${{matrix.target}}.dll
-                echo "mv $f output/malefic-${{matrix.target}}.dll"
+                echo "mv $f output/modules-${{matrix.target}}.dll"
               elif [[ "$f" == *malefic.exe ]]; then
                 mv "$f" output/${{matrix.target}}.exe
                 echo "mv $f output/malefic-${{matrix.target}}.exe"
