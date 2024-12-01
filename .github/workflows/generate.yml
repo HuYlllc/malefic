@@ -102,17 +102,18 @@ jobs:
             "./target/${{matrix.target}}/release/malefic.dll"
             "./target/${{matrix.target}}/release/malefic.exe"
           )
+          tree ./target/${{matrix.target}}/release
           for f in "${files[@]}"; do
             if [[ -f "$f" ]]; then
               if [[ "$f" == *malefic ]]; then
-                mv "$f" output/malefic-x86_64-unknown-linux-musl
-                echo "mv $f output/malefic-x86_64-unknown-linux-musl"
+                mv "$f" output/malefic-${{matrix.target}}
+                echo "mv $f output/malefic-${{matrix.target}}"
               elif [[ "$f" == *malefic.dll ]]; then
-                mv "$f" output/malefic-x86_64-unknown-linux-musl.dll
-                echo "mv $f output/malefic-x86_64-unknown-linux-musl.dll"
+                mv "$f" output/malefic-${{matrix.target}}.dll
+                echo "mv $f output/malefic-${{matrix.target}}.dll"
               elif [[ "$f" == *malefic.exe ]]; then
-                mv "$f" output/malefic-x86_64-unknown-linux-musl.exe
-                echo "mv $f output/malefic-x86_64-unknown-linux-musl.exe"
+                mv "$f" output/${{matrix.target}}.exe
+                echo "mv $f output/malefic-${{matrix.target}}.exe"
               fi
               break 
             fi
