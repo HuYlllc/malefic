@@ -94,30 +94,9 @@ jobs:
 
       - name: Rename binary for ${{matrix.target}}
         run: |
-          mkdir -p output/
           sudo chmod -R 777 target
+          sudo chmod -R 777 output
           
-          files=(
-            "./target/${{matrix.target}}/release/malefic"
-            "./target/${{matrix.target}}/release/modules.dll"
-            "./target/${{matrix.target}}/release/malefic.exe"
-          )
-          for f in "${files[@]}"; do
-            if [[ -f "$f" ]]; then
-              if [[ "$f" == *malefic ]]; then
-                mv "$f" output/malefic-${{matrix.target}}
-                echo "mv $f output/malefic-${{matrix.target}}"
-              elif [[ "$f" == *modules.dll ]]; then
-                mv "$f" output/modules-${{matrix.target}}.dll
-                echo "mv $f output/modules-${{matrix.target}}.dll"
-              elif [[ "$f" == *malefic.exe ]]; then
-                mv "$f" output/malefic-${{matrix.target}}.exe
-                echo "mv $f output/malefic-${{matrix.target}}.exe"
-              fi
-              break 
-            fi
-          done
-
       - name: Upload artifact ${{matrix.target}}
         if: ${{ github.event.inputs.release == 'none' }}
         uses: actions/upload-artifact@v4
