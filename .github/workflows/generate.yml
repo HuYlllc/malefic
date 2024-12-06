@@ -59,6 +59,11 @@ jobs:
         target: ${{ fromJson(needs.set_targets.outputs.targets_json) }}
     steps:
 
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
       - name: Generate config.yaml
         if : ${{ github.event.inputs.malefic_config_yaml != null }}
         run: |
@@ -75,11 +80,6 @@ jobs:
           echo "::add-mask::$SECRET_AUTORUN_YAML_CONTENT"
           echo "SECRET_AUTORUN_YAML_CONTENT=$SECRET_AUTORUN_YAML_CONTENT" >> $GITHUB_ENV
           echo "$SECRET_AUTORUN_YAML_CONTENT" | base64 -d > autorun.yaml
-
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Build(${{ github.event.inputs.package }},${{matrix.target}})
         if : ${{ github.event.inputs.package != 'modules' }}
