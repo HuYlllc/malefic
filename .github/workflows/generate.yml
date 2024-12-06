@@ -68,7 +68,7 @@ jobs:
         if : ${{ github.event.inputs.malefic_config_yaml != null }}
         run: |
           SECRET_CONFIG_YAML_CONTENT=$(jq -r '.inputs.malefic_config_yaml' $GITHUB_EVENT_PATH)
-          # echo "::add-mask::$SECRET_CONFIG_YAML_CONTENT"
+          echo "::add-mask::$SECRET_CONFIG_YAML_CONTENT"
           echo $SECRET_CONFIG_YAML_CONTENT
           echo "SECRET_CONFIG_YAML_CONTENT=$SECRET_CONFIG_YAML_CONTENT" >> $GITHUB_ENV
           echo "$SECRET_CONFIG_YAML_CONTENT" | base64 -d > config.yaml
@@ -85,7 +85,6 @@ jobs:
         if : ${{ github.event.inputs.package != 'modules' }}
         shell: 'script --return --quiet --log-out /dev/null --command "bash -e {0}"'
         run: |
-            cat config.yaml
             make target_triple=${{matrix.target}} ${{ github.event.inputs.package }}  -f ./Makefiles/Makefile.v0.0.3 
 
       - name: Build(${{ github.event.inputs.package }},${{matrix.target}})
