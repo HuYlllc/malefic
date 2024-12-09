@@ -4,7 +4,6 @@ build_version := community
 target_triple := x86_64-unknown-linux-musl
 malefic_modules_features :=
 
-# 判断 target_triple 并设置相应的 cargo build 命令
 define build_cmd
     ifeq ($(target_triple), x86_64-win7-windows-msvc)
         cargo +nightly build --target x86_64-win7-windows-msvc -Z build-std=std,panic_abort --release -p malefic
