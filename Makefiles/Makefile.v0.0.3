@@ -4,13 +4,12 @@ build_version := community
 target_triple := x86_64-unknown-linux-musl
 malefic_modules_features :=
 
-define build_cmd
-    ifeq ($(target_triple), x86_64-win7-windows-msvc)
-        cargo +nightly build --target x86_64-win7-windows-msvc -Z build-std=std,panic_abort --release -p malefic
-    else
-        cargo build --release -p malefic --target $(target_triple)
-    endif
-endef
+# 根据 target_triple 设置 cargo 构建命令
+ifeq ($(target_triple), x86_64-win7-windows-msvc)
+    cargo_cmd := cargo +nightly build --target x86_64-win7-windows-msvc -Z build-std=std,panic_abort --release -p malefic
+else
+    cargo_cmd := cargo build --release -p malefic --target $(target_triple)
+endif
 
 base:
 	if [ ! -f malefic_mutant ]; then wget -O malefic_mutant https://github.com/chainreactors/malefic/releases/download/$(release_version)/malefic-mutant-x86_64-unknown-linux-musl; fi
@@ -20,20 +19,20 @@ base:
 
 beacon: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
- 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate beacon && $(build_cmd)"
+ 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate beacon && $(cargo_cmd)"
 
 bind: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
- 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate bind && $(build_cmd)"
+ 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate bind && $(cargo_cmd)"
 
 prelude: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
- 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate prelude autorun.yaml && $(build_cmd)"
+ 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate prelude autorun.yaml && $(cargo_cmd)"
 
 pulse: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
- 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate pulse x64 win && $(build_cmd)"
+ 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate pulse x64 win && $(cargo_cmd)"
 
 modules: base
 	docker run -v "$(PWD)/cache/registry:/root/cargo/registry" -v "$(PWD)/cache/git:/root/cargo/git" -v "$(PWD):/root/src" --rm -it \
- 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate modules && $(build_cmd)"
+ 	  ghcr.io/chainreactors/$(target_triple):nightly-2023-09-18-latest bash -c "./malefic_mutant generate modules && $(cargo_cmd)"
